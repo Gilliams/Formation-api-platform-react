@@ -1,9 +1,8 @@
+import moment from "moment";
 import React, { useEffect, useState } from 'react';
 import Pagination from '../components/Pagination';
-import Axios from 'axios';
-import moment from "moment"
+import InvoicesAPI from "../services/invoicesAPI";
 
-import InvoicesAPI from "../services/invoicesAPI"
 
 const STATUS_CLASSES = {
     PAID: "success",
