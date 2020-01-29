@@ -4,6 +4,8 @@ import Field from '../components/Forms/Field';
 import Select from '../components/Forms/Select';
 import CustomersAPI from "../services/customersAPI";
 import invoicesAPI from '../services/invoicesAPI';
+import { toast } from 'react-toastify';
+import FormContentLoader from '../components/loaders/FormContentLoader';
 
 const invoicePage = ({history, match}) => {
 
@@ -25,6 +27,8 @@ const invoicePage = ({history, match}) => {
         status: ""
     });
 
+    const [loading, setLoading] = useState(true)
+
     // Récupération des clients
     const fetchCustomers = async () => {
         try {
@@ -33,8 +37,10 @@ const invoicePage = ({history, match}) => {
             if(!invoice.customer){
                 setInvoice({...invoice, customer: data[0].id})
             }
+            setLoading(false)
         } catch (error) {
-            historyreplace('/invoices')        
+            toast.error("Une erreur est survenue")
+            historyreplace('/invoices')     
         }
     }
 
@@ -43,7 +49,9 @@ const invoicePage = ({history, match}) => {
         try {
             const {amount, status, customer} = await invoicesAPI.find(id)
             setInvoice({amount, status, customer: customer.id});
+            setLoading(false)
         } catch (error) {
+            toast.error("Une erreur est survenue")
             history.replace('/invoices')
         }
     }
@@ -76,8 +84,10 @@ const invoicePage = ({history, match}) => {
         try {
             if(editing){
                 await invoicesAPI.update(id, invoice)
+                toast.success("La facture a bien été modifiée")
             }else{
                 await invoicesAPI.create(invoice)
+                toast.success("La facture a bien été créer")
                 history.replace('/invoices')
             }
         } catch ({response}) {
@@ -89,6 +99,7 @@ const invoicePage = ({history, match}) => {
                     apiErrors[propertyPath] = message
                 })
                 setErrors(apiErrors)
+                toast.error("Une erreur est survenue")
             }
         }
 
@@ -96,9 +107,10 @@ const invoicePage = ({history, match}) => {
 
     return ( 
         <>
-          {editing && <h1>Modification d'une facture</h1> || <h1>Création d'une facture</h1>}  
+        {editing && <h1>Modification d'une facture</h1> || <h1>Création d'une facture</h1>}  
+        {loading && <FormContentLoader />}
 
-          <form onSubmit={handleSubmit}>
+          { !loading && <form onSubmit={handleSubmit}>
             <Field 
                 name="amount"
                 type="number"
@@ -117,7 +129,7 @@ const invoicePage = ({history, match}) => {
                 onChange={handleChange}
             >
                 {customers.map(customer => (
-                    <option key={customer.id} value={customer.id}>{customer.firstName}{customer.lastName}</option>
+                    <option key={customer.id} value={customer.id}>{customer.firstName} {customer.lastName}</option>
                 ))}
             </Select>
 
@@ -138,7 +150,7 @@ const invoicePage = ({history, match}) => {
                 <Link to={"/invoices"} className="btn btn-link"> Retour aux factures </Link>
             </div>
             
-          </form>
+          </form>}
 
         </>
      );
