@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import Field from '../components/Forms/Field';
 import Select from '../components/Forms/Select';
 import CustomersAPI from "../services/customersAPI";
-import invoicesAPI from '../services/invoicesAPI';
+import InvoicesAPI from '../services/invoicesAPI';
 import { toast } from 'react-toastify';
 import FormContentLoader from '../components/loaders/FormContentLoader';
 
@@ -47,7 +47,7 @@ const invoicePage = ({history, match}) => {
     // Récupération d'une facture
     const fetchInvoice = async id => {
         try {
-            const {amount, status, customer} = await invoicesAPI.find(id)
+            const {amount, status, customer} = await InvoicesAPI.find(id)
             setInvoice({amount, status, customer: customer.id});
             setLoading(false)
         } catch (error) {
@@ -83,10 +83,10 @@ const invoicePage = ({history, match}) => {
 
         try {
             if(editing){
-                await invoicesAPI.update(id, invoice)
+                await InvoicesAPI.update(id, invoice)
                 toast.success("La facture a bien été modifiée")
             }else{
-                await invoicesAPI.create(invoice)
+                await InvoicesAPI.create(invoice)
                 toast.success("La facture a bien été créer")
                 history.replace('/invoices')
             }
@@ -99,7 +99,7 @@ const invoicePage = ({history, match}) => {
                     apiErrors[propertyPath] = message
                 })
                 setErrors(apiErrors)
-                toast.error("Une erreur est survenue")
+                toast.error("Des erreurs dans votre formulaire")
             }
         }
 

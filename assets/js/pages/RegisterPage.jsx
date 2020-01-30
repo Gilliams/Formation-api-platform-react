@@ -1,9 +1,8 @@
-import React,  {useState} from 'react';
-import Field from '../components/Forms/Field';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import Axios from 'axios';
-import usersAPI from '../services/usersAPI';
 import { toast } from 'react-toastify';
+import Field from '../components/Forms/Field';
+import usersAPI from '../services/usersAPI';
 
 const RegisterPage = ({history}) => {
     
@@ -30,6 +29,7 @@ const RegisterPage = ({history}) => {
 
     // Gestion de la soumission du formulaire
     const handleSubmit = async event => {
+        event.preventDefault()
 
         const apiErrors = {}
 
@@ -45,9 +45,9 @@ const RegisterPage = ({history}) => {
             await usersAPI.register(user)
             setErrors({})
             toast.success("Vous êtes désormais inscrit, vous pouvez vous connectez !")
-            history.replaceState("/login")
+            history.replace("/login")
         } catch (error) {
-            const {violations} = error.response.data
+            const { violations } = error.response.data
 
             if(violations){
                 
