@@ -91,6 +91,9 @@ const invoicePage = ({history, match}) => {
                 history.replace('/invoices')
             }
         } catch ({response}) {
+            console.log(invoice)
+            console.log(response)
+            console.log(response.data)
             const {violations} = response.data
 
             if(violations){

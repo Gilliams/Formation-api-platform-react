@@ -11,6 +11,7 @@ const RegisterPage = ({history}) => {
         lastName: "",
         email: "",
         password: "",
+        passwordConfirm: "",
     })
 
     const [errors, setErrors] = useState({
